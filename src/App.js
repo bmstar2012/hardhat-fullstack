@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import Greeter from './artifacts/contracts/Greeter.sol/Greeter.json'
 
 // Update with the contract address logged out to the CLI when it was deployed
-const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 function App() {
   // store greeting in local state
@@ -35,10 +35,14 @@ function App() {
     if (typeof window.ethereum !== 'undefined') {
       await requestAccount()
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner()
+      console.log('here - 1', provider);
+      const signer = provider.getSigner();
+      console.log('here - 2', signer);
       const contract = new ethers.Contract(greeterAddress, Greeter.abi, signer)
       const transaction = await contract.setGreeting(greeting)
+      console.log('here - 3', transaction);
       await transaction.wait()
+      console.log('here - 4', transaction);
       fetchGreeting()
     }
   }
