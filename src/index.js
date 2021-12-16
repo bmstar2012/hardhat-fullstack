@@ -2,12 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 // import App from './App';
-import TokenApp from './TokenApp';
+// import TokenApp from './TokenApp';
+import BurningApp from './BurningApp';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <TokenApp />
+      {/*<TokenApp />*/}
+      <BurningApp/>
   </React.StrictMode>,
   document.getElementById('root')
 );
