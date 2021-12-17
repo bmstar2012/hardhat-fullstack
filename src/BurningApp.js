@@ -21,6 +21,7 @@ function BurningApp() {
     let [tokenAddress, setTokenAddress] = useState('');
     let [tokenId, setTokenId] = useState('');
     let [isProcessing, setIsProcessing] = useState(false);
+    let [removedList, setRemovedList] = useState([]);
     useEffect(() => {
         Moralis.start({serverUrl: MORALIS_SERVER_URL, appId: MORALIS_APP_ID});
     }, []);
@@ -33,6 +34,9 @@ function BurningApp() {
     //     console.log("here--click");
     //     await burnNFT(token_address, token_id)
     // }
+    function getTokenKey(tokenAddress, tokenId) {
+        return `${tokenAddress}_${tokenId}`;
+    }
 
     async function burnNFT(nftTokenAddress, nftTokenId) {
         if (typeof window.ethereum !== 'undefined') {
@@ -50,6 +54,7 @@ function BurningApp() {
             setTxId(transaction.hash);
             setWallet(account);
             setIsProcessing(false);
+            setRemovedList([...removedList, getTokenKey(nftTokenAddress, nftTokenId)]);
         }
     }
 
@@ -66,17 +71,21 @@ function BurningApp() {
         }
     }
 
-    let list = nfts.map((item) => {
+    let list = [];
+    nfts.forEach((item) => {
         const {name, symbol, token_address, token_uri, token_id} = item;
-        return (<div key={`${token_address}${token_id}`} className={"nft-data"}>
-            name: {name}<br/>
-            token_address: {token_address}<br/>
-            token_id: {token_id}<br/>
-            token_uri: {token_uri}<br/>
-            <button onClick={async () => {
-                await burnNFT(token_address, token_id)}
-            }>Burn</button>
-        </div>)
+        const tokenKey = getTokenKey(token_address, token_id);
+        if (!removedList.includes(tokenKey)) {
+            list.push(<div key={`${token_address}${token_id}`} className={"nft-data"}>
+                name: {name}<br/>
+                token_address: {token_address}<br/>
+                token_id: {token_id}<br/>
+                token_uri: {token_uri}<br/>
+                <button onClick={async () => {
+                    await burnNFT(token_address, token_id)}
+                }>Burn</button>
+            </div>);
+        }
     })
     console.log("list", list);
 
